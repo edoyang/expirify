@@ -48,7 +48,7 @@ app.post("/api/products", async (req, res) => {
     res.status(201).send({ message: "Product added successfully", product });
   } catch (err) {
     if (err.code === 11000) {
-      return res.status(400);
+      return res.status(400).send({ error: "Product already exists" });
     }
     res
       .status(500)
@@ -73,7 +73,10 @@ app.get("/api/product/:barcode", async (req, res) => {
   try {
     const { barcode } = req.params;
 
-    const product = await Product.findOne({ barcode: parseInt(barcode) });
+    // Query for both number and string representations of the barcode
+    const product = await Product.findOne({
+      $or: [{ barcode: parseInt(barcode) }, { barcode: barcode }],
+    });
 
     if (!product) {
       return res.status(404).send({ error: "Product not found" });
@@ -116,6 +119,7 @@ app.patch("/api/product/:barcode", async (req, res) => {
   }
 });
 
+// Start the Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
