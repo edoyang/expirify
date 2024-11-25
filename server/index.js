@@ -10,9 +10,9 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ["https://expirify.vercel.app", "https://expirify.vercel.app/"], // Allow only your frontend's origin
-    methods: ["GET", "POST", "PATCH", "DELETE"], // Allow specific HTTP methods
-    credentials: true, // Allow credentials (if cookies or authentication are used)
+    origin: [process.env.VERCEL_CLIENT, process.env.LOCAL_CLIENT],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
   })
 );
 
@@ -26,7 +26,7 @@ mongoose
 const productSchema = new mongoose.Schema({
   barcode: { type: Number, required: true, unique: true },
   product_name: { type: String, required: true },
-  date: { type: String, required: true },
+  date: { type: String },
 });
 
 const Product = mongoose.model("Product", productSchema, "products");
