@@ -16,7 +16,7 @@ const Product = () => {
     if (barcode !== prevBarcode && barcode !== "Please scan the barcode") {
       // Fetch product details if barcode changes
       axios
-        .get(`${meta.env.BACKEND_API_BASE}/api/product/${barcode}`)
+        .get(`${import.meta.env.BACKEND_API_BASE}/api/product/${barcode}`)
         .then((response) => {
           if (response.status === 200) {
             // If product is found, update form state for PATCH
@@ -52,13 +52,13 @@ const Product = () => {
     try {
       if (method === "POST") {
         const response = await axios.post(
-          `${meta.env.BACKEND_API_BASE}/api/products`,
+          `${import.meta.env.BACKEND_API_BASE}/api/products`,
           payload
         );
         console.log("Product added successfully:", response.data);
       } else if (method === "PATCH") {
         const response = await axios.patch(
-          `${meta.env.BACKEND_API_BASE}/api/product/${barcode}`,
+          `${import.meta.env.BACKEND_API_BASE}/api/product/${barcode}`,
           payload
         );
         console.log("Product updated successfully:", response.data);
