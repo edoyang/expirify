@@ -16,7 +16,12 @@ const Product = () => {
     if (barcode !== prevBarcode && barcode !== "Please scan the barcode") {
       // Fetch product details if barcode changes
       axios
-        .get(`${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`)
+        .get(
+          `${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`,
+          {
+            withCredentials: true, // Include credentials (cookies) if needed
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             // If product is found, update form state for PATCH
@@ -34,6 +39,8 @@ const Product = () => {
             setExpiryDate("");
             setFormState("Add Product");
             setMethod("POST");
+          } else {
+            console.error("Error fetching product:", error.message);
           }
         });
       setPrevBarcode(barcode);
@@ -53,13 +60,19 @@ const Product = () => {
       if (method === "POST") {
         const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_API_BASE}/api/products`,
-          payload
+          payload,
+          {
+            withCredentials: true, // Include credentials if needed
+          }
         );
         console.log("Product added successfully:", response.data);
       } else if (method === "PATCH") {
         const response = await axios.patch(
           `${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`,
-          payload
+          payload,
+          {
+            withCredentials: true, // Include credentials if needed
+          }
         );
         console.log("Product updated successfully:", response.data);
       }
