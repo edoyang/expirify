@@ -16,7 +16,7 @@ const Product = () => {
     if (barcode !== prevBarcode && barcode !== "Please scan the barcode") {
       // Fetch product details if barcode changes
       axios
-        .get(`http://localhost:3000/api/product/${barcode}`)
+        .get(`${meta.env.BACKEND_API_BASE}/api/product/${barcode}`)
         .then((response) => {
           if (response.status === 200) {
             // If product is found, update form state for PATCH
@@ -52,13 +52,13 @@ const Product = () => {
     try {
       if (method === "POST") {
         const response = await axios.post(
-          "http://localhost:3000/api/products",
+          `${meta.env.BACKEND_API_BASE}/api/products`,
           payload
         );
         console.log("Product added successfully:", response.data);
       } else if (method === "PATCH") {
         const response = await axios.patch(
-          `http://localhost:3000/api/product/${barcode}`,
+          `${meta.env.BACKEND_API_BASE}/api/product/${barcode}`,
           payload
         );
         console.log("Product updated successfully:", response.data);
@@ -94,7 +94,7 @@ const Product = () => {
           name="name"
           required
           value={productName || ""}
-          placeholder="E.g. (Mur Thai) Nissin Waffer 250g"
+          placeholder="E.g. (Mur Thai) Rotary Fish Cracker 250g"
           onChange={(e) => setProductName(e.target.value)}
         />
         <label htmlFor="date">Expiry Date:</label>
