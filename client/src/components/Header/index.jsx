@@ -1,9 +1,11 @@
-import React from 'react'
+import "./style.scss";
 
 const Header = () => {
   return (
-    <div>Header</div>
-  )
-}
+    <div className="header">
+      <h1>Product Inventory</h1>
+    </div>
+  );
+};
 
-export default Header
+export default Header;

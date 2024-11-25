@@ -1,0 +1,20 @@
+:root {
+  --global-padding: 0 1rem;
+  --global-gap: 1rem;
+}
+
+body > #root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--global-gap);
+}
+
+html,
+body,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
