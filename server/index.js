@@ -10,8 +10,9 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "*",
-    credentials: true,
+    origin: "https://expirify.vercel.app", // Allow only your frontend's origin
+    methods: ["GET", "POST", "PATCH", "DELETE"], // Allow specific HTTP methods
+    credentials: true, // Allow credentials (if cookies or authentication are used)
   })
 );
 
