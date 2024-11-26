@@ -13,5 +13,10 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--global-gap) / 2);
+
+    .barcode {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }

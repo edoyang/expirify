@@ -11,6 +11,10 @@ const Product = () => {
   const [productName, setProductName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
 
+  const handleRemoveBarcode = () => {
+    setBarcode(null);
+  };
+
   // Handle barcode state changes
   useEffect(() => {
     if (barcode !== prevBarcode && barcode !== "Please scan the barcode") {
@@ -99,6 +103,7 @@ const Product = () => {
       <form onSubmit={handleSubmit}>
         <div className="barcode">
           <p>{barcode}</p>
+          <button onClick={handleRemoveBarcode}>Remove Barcode</button>
         </div>
         <label htmlFor="name">Product Name:</label>
         <input
