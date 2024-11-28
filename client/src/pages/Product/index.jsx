@@ -69,7 +69,7 @@ const Product = () => {
             withCredentials: true, // Include credentials if needed
           }
         );
-        console.log("Product added successfully:", response.data);
+        window.alert("Product added successfully:", response.data);
       } else if (method === "PATCH") {
         const response = await axios.patch(
           `${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`,
@@ -78,13 +78,10 @@ const Product = () => {
             withCredentials: true, // Include credentials if needed
           }
         );
-        console.log("Product updated successfully:", response.data);
+        window.alert("Product updated successfully:", response.data);
       }
     } catch (error) {
-      console.error(
-        "Error during submission:",
-        error.response?.data || error.message
-      );
+      window.alert("Error adding/updating product:", error.message);
     }
   };
 
