@@ -17,7 +17,11 @@ const Product = () => {
 
   // Handle barcode state changes
   useEffect(() => {
-    if (barcode !== prevBarcode && barcode !== "Please scan the barcode") {
+    if (
+      barcode !== prevBarcode &&
+      barcode !== "Please scan the barcode" &&
+      barcode !== null
+    ) {
       // Fetch product details if barcode changes
       axios
         .get(
