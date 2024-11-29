@@ -10,52 +10,57 @@ const Product = () => {
   const [method, setMethod] = useState("POST"); // Default method
   const [productName, setProductName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
+  const [message, setMessage] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
 
   const handleRemoveBarcode = () => {
     setBarcode(null);
   };
 
-  // Handle barcode state changes
   useEffect(() => {
     if (
       barcode !== prevBarcode &&
       barcode !== "Please scan the barcode" &&
       barcode !== null
     ) {
-      // Fetch product details if barcode changes
       axios
         .get(
           `${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`,
           {
-            withCredentials: true, // Include credentials (cookies) if needed
+            withCredentials: true,
           }
         )
         .then((response) => {
           if (response.status === 200) {
-            // If product is found, update form state for PATCH
             const product = response.data;
             setProductName(product.product_name);
             setExpiryDate(product.date);
             setFormState("Update Product");
             setMethod("PATCH");
+            setMessage("Product found. Update details if needed.");
+            setShowMessage(true);
+            setTimeout(() => setShowMessage(false), 3000);
           }
         })
         .catch((error) => {
           if (error.response?.status === 404) {
-            // If product is not found, reset form state for POST
             setProductName("");
             setExpiryDate("");
             setFormState("Add Product");
             setMethod("POST");
+            setMessage("Product not found. Add details below.");
+            setShowMessage(true);
+            setTimeout(() => setShowMessage(false), 3000);
           } else {
-            console.error("Error fetching product:", error.message);
+            setMessage("Error fetching product. Please try again.");
+            setShowMessage(true);
+            setTimeout(() => setShowMessage(false), 3000);
           }
         });
       setPrevBarcode(barcode);
     }
   }, [barcode, prevBarcode]);
 
-  // Submit handler for form
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -66,31 +71,45 @@ const Product = () => {
 
     try {
       if (method === "POST") {
-        const response = await axios.post(
+        await axios.post(
           `${import.meta.env.VITE_BACKEND_API_BASE}/api/products`,
           payload,
           {
-            withCredentials: true, // Include credentials if needed
+            withCredentials: true,
           }
         );
-        window.alert("Product added successfully:", response.data);
+        setMessage("Product added successfully.");
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 3000);
       } else if (method === "PATCH") {
-        const response = await axios.patch(
+        await axios.patch(
           `${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`,
           payload,
           {
-            withCredentials: true, // Include credentials if needed
+            withCredentials: true,
           }
         );
-        window.alert("Product updated successfully:", response.data);
+        setMessage("Product updated successfully.");
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 3000);
       }
     } catch (error) {
-      window.alert("Error adding/updating product:", error.message);
+      if (error.response?.status === 400) {
+        console.log(error.response.data.error);
+      } else {
+        console.log(error);
+      }
     }
+    // Show the message and reset after 3s
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 3000);
   };
 
   return (
     <div className="product-page">
+      <div className={`alert ${showMessage ? "visible" : ""}`}>
+        <p>{message}</p>
+      </div>
       <div className="camera">
         <BarcodeScannerComponent
           onUpdate={(err, result) => {

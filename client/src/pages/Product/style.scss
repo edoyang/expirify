@@ -3,10 +3,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--global-gap);
+  position: relative;
+
   .camera {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    height: 300px;
+    position: relative;
+    background: #000;
+    overflow: hidden;
   }
 
   > form {
@@ -17,6 +21,41 @@
     .barcode {
       display: flex;
       justify-content: space-between;
+    }
+  }
+
+  .alert {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8d7da; /* Light red background for alert */
+    color: #721c24; /* Dark red text */
+    padding: 10px 20px;
+    border: 1px solid #f5c6cb; /* Border to match background */
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.5s linear;
+
+    /* Animation styles */
+    &.visible {
+      opacity: 1;
+      animation: slideDown 3s forwards;
+    }
+  }
+
+  @keyframes slideDown {
+    0% {
+      top: 0;
+    }
+    50% {
+      top: 10%;
+    }
+    100% {
+      top: 0;
     }
   }
 }
