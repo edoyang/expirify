@@ -37,15 +37,12 @@ app.post("/api/products", async (req, res) => {
   try {
     const { barcode, product_name, date } = req.body;
 
-    // Validate required fields
     if (!barcode || !product_name) {
       return res.status(400).send("Barcode and product name are required.");
     }
 
-    // Convert empty or missing `date` to `null`
     const normalizedDate = date ? new Date(date) : null;
 
-    // Create the product
     const product = new Product({
       barcode,
       product_name,
@@ -76,20 +73,61 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
-app.get("/api/expired-products", async (req, res) => {
+app.get("/api/expired-products/monthly", async (req, res) => {
   try {
     const today = new Date();
-    const nextMonth = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+    const nextMonth = new Date(today);
     nextMonth.setMonth(nextMonth.getMonth() + 1);
 
     const products = await Product.find({
-      date: { $gte: today, $lte: nextMonth }, // Query works for Date type
-    });
+      date: { $gte: today, $lte: nextMonth },
+    }).sort({ date: 1 }); // Sort by date (ascending)
 
     res.status(200).send(products);
   } catch (err) {
     res.status(500).send({
       error: "Failed to fetch products expiring within the next month",
+      details: err.message,
+    });
+  }
+});
+
+app.get("/api/expired-products/weekly", async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+
+    const products = await Product.find({
+      date: { $gte: today, $lte: nextWeek },
+    }).sort({ date: 1 }); // Sort by date (ascending)
+
+    res.status(200).send(products);
+  } catch (err) {
+    res.status(500).send({
+      error: "Failed to fetch products expiring within the next week",
+      details: err.message,
+    });
+  }
+});
+
+app.get("/api/expired-products", async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+    const products = await Product.find({
+      date: { $lt: today },
+    });
+
+    res.status(200).send(products);
+  } catch (err) {
+    res.status(500).send({
+      error: "Failed to fetch expired products",
       details: err.message,
     });
   }

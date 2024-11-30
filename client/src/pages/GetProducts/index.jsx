@@ -3,23 +3,25 @@ import React, { useState, useEffect } from "react";
 
 const GetProducts = () => {
   const [products, setProducts] = useState([]); // State to store fetched products
+  const [filter, setFilter] = useState("expired-products"); // Default API endpoint
 
+  // Fetch products whenever the filter changes
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_API_BASE}/api/expired-products`)
+      .get(`${import.meta.env.VITE_BACKEND_API_BASE}/api/${filter}`)
       .then((response) => {
         setProducts(response.data);
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  }, []);
+  }, [filter]);
 
   const handleCollect = (barcode) => {
     axios
       .patch(
         `${import.meta.env.VITE_BACKEND_API_BASE}/api/product/${barcode}`,
-        { collected: true },
+        { date: null }, // Explicitly set date to null
         { withCredentials: true }
       )
       .then((response) => {
@@ -38,6 +40,16 @@ const GetProducts = () => {
 
   return (
     <div className="get-products">
+      <div className="get-products-sort">
+        {/* Update filter state on button click */}
+        <button onClick={() => setFilter("expired-products/monthly")}>
+          Monthly
+        </button>
+        <button onClick={() => setFilter("expired-products/weekly")}>
+          Weekly
+        </button>
+        <button onClick={() => setFilter("expired-products")}>Today</button>
+      </div>
       <div className="grid-items">
         {products.map((product) => (
           <div className="item" key={product.barcode}>
