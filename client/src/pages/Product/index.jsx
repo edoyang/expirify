@@ -34,7 +34,10 @@ const Product = () => {
           if (response.status === 200) {
             const product = response.data;
             setProductName(product.product_name);
-            setExpiryDate(product.date);
+            const formattedDate = product.date
+              ? new Date(product.date).toISOString().split("T")[0]
+              : ""; // Ensure no error if date is null or undefined
+            setExpiryDate(formattedDate);
             setFormState("Update Product");
             setMethod("PATCH");
             setMessage("Product found. Update details if needed.");
@@ -66,7 +69,7 @@ const Product = () => {
     const payload = {
       barcode: parseInt(barcode),
       product_name: productName,
-      date: new Date(expiryDate),
+      date: expiryDate ? new Date(expiryDate) : null,
     };
 
     try {

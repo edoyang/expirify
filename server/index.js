@@ -37,13 +37,20 @@ app.post("/api/products", async (req, res) => {
   try {
     const { barcode, product_name, date } = req.body;
 
-    if (!barcode || !product_name || !date) {
-      return res
-        .status(400)
-        .send("All fields are required: barcode, product_name, date (ddmmyy)");
+    // Validate required fields
+    if (!barcode || !product_name) {
+      return res.status(400).send("Barcode and product name are required.");
     }
 
-    const product = new Product({ barcode, product_name, date });
+    // Convert empty or missing `date` to `null`
+    const normalizedDate = date ? new Date(date) : null;
+
+    // Create the product
+    const product = new Product({
+      barcode,
+      product_name,
+      date: normalizedDate, // Handle `null` or valid date
+    });
     await product.save();
 
     res.status(201).send({ message: "Product added successfully", product });
