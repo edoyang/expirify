@@ -76,7 +76,7 @@ const GetProducts = () => {
               <button
                 className="collect-item"
                 onClick={() => handleCollect(product.barcode)}>
-                Collect Item
+                Collect this item
               </button>
             </div>
           ))}

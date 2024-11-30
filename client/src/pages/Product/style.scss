@@ -1,17 +1,17 @@
 .product-page {
-  padding: var(--global-padding);
   display: flex;
   flex-direction: column;
   gap: var(--global-gap);
   position: relative;
+  width: 100%;
 
   .camera {
     width: 100%;
-    max-width: 400px;
-    height: 300px;
     position: relative;
-    background: #000;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   > form {
