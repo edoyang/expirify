@@ -5,7 +5,6 @@ const GetProducts = () => {
   const [products, setProducts] = useState([]); // State to store fetched products
 
   useEffect(() => {
-    // Fetch expired products
     axios
       .get(`${import.meta.env.VITE_BACKEND_API_BASE}/api/expired-products`)
       .then((response) => {

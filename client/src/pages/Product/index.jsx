@@ -66,7 +66,7 @@ const Product = () => {
     const payload = {
       barcode: parseInt(barcode),
       product_name: productName,
-      date: expiryDate,
+      date: new Date(expiryDate),
     };
 
     try {
@@ -100,7 +100,6 @@ const Product = () => {
         console.log(error);
       }
     }
-    // Show the message and reset after 3s
     setShowMessage(true);
     setTimeout(() => setShowMessage(false), 3000);
   };
