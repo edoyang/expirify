@@ -76,7 +76,7 @@ app.get("/api/products", async (req, res) => {
 app.get("/api/expired-products/monthly", async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+    today.setHours(0, 0, 0, 0);
 
     const nextMonth = new Date(today);
     nextMonth.setMonth(nextMonth.getMonth() + 1);
@@ -97,7 +97,7 @@ app.get("/api/expired-products/monthly", async (req, res) => {
 app.get("/api/expired-products/weekly", async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+    today.setHours(0, 0, 0, 0);
 
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
@@ -118,7 +118,7 @@ app.get("/api/expired-products/weekly", async (req, res) => {
 app.get("/api/expired-products", async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+    today.setHours(0, 0, 0, 0);
 
     const products = await Product.find({
       date: { $lt: today },

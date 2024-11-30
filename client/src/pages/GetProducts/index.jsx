@@ -3,19 +3,21 @@ import React, { useState, useEffect } from "react";
 
 const GetProducts = () => {
   const [products, setProducts] = useState([]); // State to store fetched products
-  const [filter, setFilter] = useState("expired-products"); // Default API endpoint
 
-  // Fetch products whenever the filter changes
+  const fetchProducts = async (filter) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_API_BASE}/api/${filter}`
+      );
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_API_BASE}/api/${filter}`)
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, [filter]);
+    fetchProducts("expired-products"); // Default to "Today" filter
+  }, []);
 
   const handleCollect = (barcode) => {
     axios
@@ -38,35 +40,49 @@ const GetProducts = () => {
       });
   };
 
+  // Format the date to dd-mm-yy
+  const formatDate = (dateString) => {
+    if (!dateString) return "No Expiry Date";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <div className="get-products">
       <div className="get-products-sort">
-        {/* Update filter state on button click */}
-        <button onClick={() => setFilter("expired-products/monthly")}>
+        <button onClick={() => fetchProducts("expired-products/monthly")}>
           Monthly
         </button>
-        <button onClick={() => setFilter("expired-products/weekly")}>
+        <button onClick={() => fetchProducts("expired-products/weekly")}>
           Weekly
         </button>
-        <button onClick={() => setFilter("expired-products")}>Today</button>
+        <button onClick={() => fetchProducts("expired-products")}>Today</button>
       </div>
-      <div className="grid-items">
-        {products.map((product) => (
-          <div className="item" key={product.barcode}>
-            <div className="item-info">
-              <h3>{product.product_name}</h3>
-              <p>Barcode: {product.barcode}</p>
-              <p>Expiry Date: {product.date || "No Expiry Date"}</p>
+
+      {/* Conditionally Render Products or Message */}
+      {products.length ? (
+        <div className="grid-items">
+          {products.map((product) => (
+            <div className="item" key={product.barcode}>
+              <div className="item-info">
+                <h3>{product.product_name}</h3>
+                <p>Barcode: {product.barcode}</p>
+                <p>Expiry Date: {formatDate(product.date)}</p>
+              </div>
+              <button
+                className="collect-item"
+                onClick={() => handleCollect(product.barcode)}>
+                Collect Item
+              </button>
             </div>
-            <button
-              className="collect-item"
-              onClick={() => handleCollect(product.barcode)} // Pass barcode to handleCollect
-            >
-              Collect Item
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <h1>No product found</h1>
+      )}
     </div>
   );
 };
