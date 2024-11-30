@@ -1,0 +1,16 @@
+.get-products {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+
+  .grid-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 100%;
+    width: 100%;
+    padding: 1rem;
+  }
+}

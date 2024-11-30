@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import "./style.scss";
 
 const GetProducts = () => {
   const [products, setProducts] = useState([]); // State to store fetched products
