@@ -4,8 +4,10 @@ import "./style.scss";
 
 const GetProducts = () => {
   const [products, setProducts] = useState([]); // State to store fetched products
+  const [loading, setLoading] = useState(false); // State to manage loading status
 
   const fetchProducts = async (filter) => {
+    setLoading(true); // Set loading to true before fetching
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_API_BASE}/api/${filter}`
@@ -13,6 +15,8 @@ const GetProducts = () => {
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false); // Set loading to false after fetching
     }
   };
 
@@ -63,8 +67,10 @@ const GetProducts = () => {
         <button onClick={() => fetchProducts("expired-products")}>Today</button>
       </div>
 
-      {/* Conditionally Render Products or Message */}
-      {products.length ? (
+      {/* Display Loading State */}
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : products.length ? (
         <div className="grid-items">
           {products.map((product) => (
             <div className="item" key={product.barcode}>
