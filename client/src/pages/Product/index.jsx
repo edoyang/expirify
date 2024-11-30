@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
+import Quagga from "quagga";
 import "./style.scss";
 
 const Product = () => {
@@ -12,6 +12,7 @@ const Product = () => {
   const [expiryDate, setExpiryDate] = useState("");
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const scannerRef = useRef(null);
 
   const handleRemoveBarcode = () => {
     setBarcode(null);
@@ -100,31 +101,56 @@ const Product = () => {
         console.log(error);
       }
     }
-    // Show the message and reset after 3s
-    setShowMessage(true);
-    setTimeout(() => setShowMessage(false), 3000);
   };
+
+  const startScanner = () => {
+    Quagga.init(
+      {
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: scannerRef.current, // Use a reference to the scanner container
+        },
+        decoder: {
+          readers: ["ean_reader", "code_128_reader"], // Add or modify readers based on your requirements
+        },
+      },
+      (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        Quagga.start();
+      }
+    );
+
+    Quagga.onDetected((data) => {
+      if (data && data.codeResult && data.codeResult.code) {
+        setBarcode(data.codeResult.code);
+        Quagga.stop(); // Stop the scanner after detecting a barcode
+      }
+    });
+  };
+
+  useEffect(() => {
+    startScanner();
+    return () => {
+      Quagga.stop(); // Clean up the scanner when the component unmounts
+    };
+  }, []);
 
   return (
     <div className="product-page">
       <div className={`alert ${showMessage ? "visible" : ""}`}>
         <p>{message}</p>
       </div>
-      <div className="camera">
-        <BarcodeScannerComponent
-          onUpdate={(err, result) => {
-            if (result) {
-              setBarcode(result.text);
-            }
-          }}
-        />
+      <div className="camera" ref={scannerRef}></div>
+      <div className="barcode">
+        <p>{barcode}</p>
+        <button onClick={handleRemoveBarcode}>Remove Barcode</button>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="barcode">
-          <p>{barcode}</p>
-          <button onClick={handleRemoveBarcode}>Remove Barcode</button>
-        </div>
         <label htmlFor="name">Product Name:</label>
         <input
           type="text"
