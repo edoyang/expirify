@@ -121,7 +121,7 @@ app.get("/api/expired-products", async (req, res) => {
     today.setHours(0, 0, 0, 0);
 
     const products = await Product.find({
-      date: { $lt: today },
+      date: { $lte: today },
     });
 
     res.status(200).send(products);
