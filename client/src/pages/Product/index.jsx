@@ -123,7 +123,13 @@ const Product = () => {
       <form onSubmit={handleSubmit}>
         <div className="barcode">
           <p>{barcode}</p>
-          <button onClick={handleRemoveBarcode}>Remove Barcode</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleRemoveBarcode();
+            }}>
+            Remove Barcode
+          </button>
         </div>
         <label htmlFor="name">Product Name:</label>
         <input
@@ -132,15 +138,21 @@ const Product = () => {
           name="name"
           required
           value={productName || ""}
-          placeholder="E.g. (Mur Thai) Rotary Fish Cracker 250g"
+          placeholder="E.g. Rotary Fish Cracker 250g (Mur Thai)"
           onChange={(e) => setProductName(e.target.value)}
         />
-        <label htmlFor="date">Expiry Date:</label>
+        <label
+          htmlFor="date"
+          onClick={() => document.getElementById("date").focus()}>
+          Expiry Date:
+        </label>
         <input
           type="date"
           id="date"
           name="date"
           value={expiryDate || ""}
+          min={new Date().toISOString().split("T")[0]}
+          onFocus={(e) => e.target.showPicker()}
           onChange={(e) => setExpiryDate(e.target.value)}
         />
         <button type="submit">{formState}</button>

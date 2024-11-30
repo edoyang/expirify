@@ -25,9 +25,9 @@ mongoose
 
 // Define the Product Schema
 const productSchema = new mongoose.Schema({
-  barcode: { type: Number, required: true, unique: true },
+  barcode: { type: Number, unique: true },
   product_name: { type: String, required: true },
-  date: { type: String },
+  date: { type: String, default: null },
 });
 
 const Product = mongoose.model("Product", productSchema, "products");
@@ -66,6 +66,28 @@ app.get("/api/products", async (req, res) => {
     res
       .status(500)
       .send({ error: "Failed to fetch products", details: err.message });
+  }
+});
+
+// GET API TO FETCH PRODUCTS EXPIRING WITHIN THE NEXT MONTH
+app.get("/api/expired-products", async (req, res) => {
+  try {
+    const today = new Date();
+    const nextMonth = new Date();
+    nextMonth.setMonth(nextMonth.getMonth() + 1); // Set the date to one month from now
+
+    const products = await Product.find({
+      date: { $gte: today, $lte: nextMonth }, // Expiry date is between today and one month later
+    });
+
+    res.status(200).send(products);
+  } catch (err) {
+    res
+      .status(500)
+      .send({
+        error: "Failed to fetch products expiring within the next month",
+        details: err.message,
+      });
   }
 });
 
