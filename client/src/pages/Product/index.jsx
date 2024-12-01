@@ -10,6 +10,7 @@ const Product = () => {
   const [method, setMethod] = useState("POST"); // Default method
   const [productName, setProductName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
+  const [image, setImage] = useState(""); // Added state for image
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
@@ -38,6 +39,7 @@ const Product = () => {
               ? new Date(product.date).toISOString().split("T")[0]
               : ""; // Ensure no error if date is null or undefined
             setExpiryDate(formattedDate);
+            setImage(product.image || ""); // Set the image from response
             setFormState("Update Product");
             setMethod("PATCH");
             setMessage("Product found. Update details if needed.");
@@ -47,8 +49,6 @@ const Product = () => {
         })
         .catch((error) => {
           if (error.response?.status === 404) {
-            setProductName("");
-            setExpiryDate("");
             setFormState("Add Product");
             setMethod("POST");
             setMessage("Product not found. Add details below.");
@@ -69,6 +69,7 @@ const Product = () => {
     const payload = {
       barcode: parseInt(barcode),
       product_name: productName,
+      image,
       date: expiryDate ? new Date(expiryDate) : null,
     };
 
@@ -142,6 +143,15 @@ const Product = () => {
           value={productName || ""}
           placeholder="E.g. Rotary Fish Cracker 250g (Mur Thai)"
           onChange={(e) => setProductName(e.target.value)}
+        />
+        <label htmlFor="image">Image URL</label>
+        <input
+          type="url"
+          id="image"
+          name="image"
+          value={image || ""}
+          placeholder="https://example.com/image.jpg"
+          onChange={(e) => setImage(e.target.value)}
         />
         <label
           htmlFor="date"
