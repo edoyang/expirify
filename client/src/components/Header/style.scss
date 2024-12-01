@@ -2,6 +2,8 @@
   max-width: 500px;
   display: flex;
   gap: 1rem;
+  padding: var(--global-padding);
+  text-align: center;
 
   > * {
     border: 1px solid black;
@@ -10,5 +12,8 @@
     color: black;
     border-radius: 4px;
     font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
