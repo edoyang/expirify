@@ -27,7 +27,8 @@ mongoose
 const productSchema = new mongoose.Schema({
   barcode: { type: Number, unique: true },
   product_name: { type: String, required: true },
-  date: { type: Date, default: null }, // Always stored in Australian time
+  image: { type: String, default: null },
+  date: { type: Date, default: null },
 });
 
 const Product = mongoose.model("Product", productSchema, "products");
@@ -41,7 +42,7 @@ const convertToAustralianTime = (utcDate) => {
 // POST API to Add a Product
 app.post("/api/products", async (req, res) => {
   try {
-    const { barcode, product_name, date } = req.body;
+    const { barcode, product_name, image, date } = req.body;
 
     if (!barcode || !product_name) {
       return res.status(400).send("Barcode and product name are required.");
@@ -54,7 +55,8 @@ app.post("/api/products", async (req, res) => {
     const product = new Product({
       barcode,
       product_name,
-      date: normalizedDate, // Convert to Australian time
+      image,
+      date: normalizedDate,
     });
     await product.save();
 
