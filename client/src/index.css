@@ -1,6 +1,9 @@
 :root {
   --global-padding: 0 1rem;
   --global-gap: 1rem;
+
+  /* color */
+  --white: #fff;
 }
 
 body > #root {

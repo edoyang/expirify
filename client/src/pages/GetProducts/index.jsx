@@ -58,13 +58,18 @@ const GetProducts = () => {
   return (
     <div className="get-products">
       <div className="get-products-sort">
-        <button onClick={() => fetchProducts("expired-products/monthly")}>
-          Monthly
-        </button>
-        <button onClick={() => fetchProducts("expired-products/weekly")}>
-          Weekly
-        </button>
-        <button onClick={() => fetchProducts("expired-products")}>Today</button>
+        <h1>Sort By</h1>
+        <div className="sort">
+          <button onClick={() => fetchProducts("expired-products/monthly")}>
+            Monthly
+          </button>
+          <button onClick={() => fetchProducts("expired-products/weekly")}>
+            Weekly
+          </button>
+          <button onClick={() => fetchProducts("expired-products")}>
+            Today
+          </button>
+        </div>
       </div>
 
       {/* Display Loading State */}

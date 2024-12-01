@@ -4,6 +4,29 @@
   align-items: center;
   flex-direction: column;
 
+  .get-products-sort {
+    display: flex;
+    gap: 0.25rem;
+    flex-direction: column;
+    text-align: center;
+
+    .sort {
+      display: flex;
+      gap: 1rem;
+
+      button {
+        border: 1px solid black;
+        padding: 0.25rem 1rem;
+        text-decoration: none;
+        color: black;
+        border-radius: 4px;
+        font-weight: bold;
+        background-color: transparent;
+        cursor: pointer;
+      }
+    }
+  }
+
   .grid-items {
     display: grid;
     grid-template-columns: repeat(2, auto);

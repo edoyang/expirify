@@ -14,7 +14,7 @@ function App() {
       <div className="content">
         <Routes>
           <Route path="" Component={Home} />
-          <Route path="/product" Component={Product} />
+          <Route path="/add-product" Component={Product} />
           <Route path="get-products" element={<GetProducts />} />
         </Routes>
       </div>
