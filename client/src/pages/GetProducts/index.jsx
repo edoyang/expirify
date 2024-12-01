@@ -75,9 +75,16 @@ const GetProducts = () => {
           {products.map((product) => (
             <div className="item" key={product.barcode}>
               <div className="item-info">
-                <h3>{product.product_name}</h3>
-                <p>Barcode: {product.barcode}</p>
-                <p>Expiry Date: {formatDate(product.date)}</p>
+                <div className="item-image-container">
+                  <img
+                    src={product.image}
+                    alt={product.product_name}
+                    className="item-image"
+                  />
+                </div>
+                <h3 className="item-name">{product.product_name}</h3>
+                <p className="item-barcode">{product.barcode}</p>
+                <p className="bbf">Expired: {formatDate(product.date)}</p>
               </div>
               <button
                 className="collect-item"
